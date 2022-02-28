@@ -9,7 +9,7 @@ class CardSwiper extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(top: 10, bottom: 10),
       width: double.infinity,
-      height: size.height * 0.5,
+      height: size.height * 0.46,
       child: Swiper(
         itemCount: 10,
         layout: SwiperLayout.STACK,
