@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:app_movies_v2/widgets/widgets.dart';
 
 class DetailsScreen extends StatelessWidget {
   //TODO: Cambiar argumentos por una instancia de movie.
@@ -18,7 +19,7 @@ class DetailsScreen extends StatelessWidget {
           _TitleAndPoster(),
           _Overview(),
           _Overview(),
-          _Overview(),
+          ActorsList(),
         ]))
       ],
     ));
@@ -37,15 +38,13 @@ class _CustomAppBar extends StatelessWidget {
         centerTitle: true,
         titlePadding: EdgeInsets.all(0),
         title: Container(
+          padding: EdgeInsets.only(bottom: 8),
             width: double.infinity,
             alignment: Alignment.bottomCenter,
             color: Colors.black26,
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
-              child: Text(
-                'movie.title',
-                style: TextStyle(fontSize: 20),
-              ),
+            child: Text(
+              'movie.title',
+              style: TextStyle(fontSize: 20),
             )),
         background: FadeInImage(
           placeholder: AssetImage('assets/loading.gif'),
