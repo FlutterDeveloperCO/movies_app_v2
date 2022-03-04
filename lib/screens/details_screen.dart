@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:app_movies_v2/widgets/widgets.dart';
+import '../models/models.dart';
 
 class DetailsScreen extends StatelessWidget {
-  //TODO: Cambiar argumentos por una instancia de movie.
 
   @override
   Widget build(BuildContext context) {
-    final String movieSelected =
-        ModalRoute.of(context)?.settings.arguments.toString() ??
-            'no-movie-selected';
+    final Movie movie =
+        ModalRoute.of(context)!.settings.arguments as Movie;
 
     return Scaffold(
         body: CustomScrollView(
       slivers: [
-        _CustomAppBar(),
+        _CustomAppBar(movie),
         SliverList(
             delegate: SliverChildListDelegate([
-          _TitleAndPoster(),
-          _Overview(),
-          _Overview(),
+          _TitleAndPoster(movie),
+          _Overview(movie),
           ActorsList(),
         ]))
       ],
@@ -27,6 +25,11 @@ class DetailsScreen extends StatelessWidget {
 }
 
 class _CustomAppBar extends StatelessWidget {
+
+  final Movie movie;
+
+  const _CustomAppBar(this.movie);
+
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
@@ -43,12 +46,12 @@ class _CustomAppBar extends StatelessWidget {
             alignment: Alignment.bottomCenter,
             color: Colors.black26,
             child: Text(
-              'movie.title',
+              movie.title,
               style: TextStyle(fontSize: 20),
             )),
         background: FadeInImage(
           placeholder: AssetImage('assets/loading.gif'),
-          image: NetworkImage('https://via.placeholder.com/500x300'),
+          image: NetworkImage(movie.backDropPath),
           fit: BoxFit.cover,
         ),
       ),
@@ -56,12 +59,18 @@ class _CustomAppBar extends StatelessWidget {
   }
 }
 
-class _TitleAndPoster extends StatelessWidget { 
+class _TitleAndPoster extends StatelessWidget {
+
+  final Movie movie;
+
+  const _TitleAndPoster(this.movie);
   
   @override
   Widget build(BuildContext context) {
 
     final TextTheme textTheme = Theme.of(context).textTheme;
+
+    final size = MediaQuery.of(context).size;
 
     return Container(
       margin: EdgeInsets.only(top: 20),
@@ -72,45 +81,47 @@ class _TitleAndPoster extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
             child: FadeInImage(
               placeholder: AssetImage('assets/no-image.jpg'),
-              image: NetworkImage('https://via.placeholder.com/200x300'),
+              image: NetworkImage(movie.fullPoster),
               height: 150,
             ),
           ),
           SizedBox(
             width: 20,
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'movie.title',
-                style: textTheme.headline5,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 2,
-              ),
-              Text(
-                'movie.originalTitle',
-                style: textTheme.subtitle1,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 2,
-              ),
-              Row(
-                children: [
-                  Icon(
-                    Icons.star,
-                    size: 20,
-                    color: Colors.yellow[900],
-                  ),
-                  SizedBox(
-                    width: 3,
-                  ),
-                  Text(
-                    'movie.voteAverage',
-                    style: textTheme.caption,
-                  )
-                ],
-              )
-            ],
+          ConstrainedBox(constraints: BoxConstraints(maxWidth: size.width - 170),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  movie.title,
+                  style: textTheme.headline5,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                ),
+                Text(
+                  movie.originalTitle,
+                  style: textTheme.subtitle1,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                ),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.star,
+                      size: 20,
+                      color: Colors.yellow[900],
+                    ),
+                    SizedBox(
+                      width: 3,
+                    ),
+                    Text(
+                      '${movie.voteAverage}',
+                      style: textTheme.caption,
+                    )
+                  ],
+                )
+              ],
+            ),
           ),
         ],
       ),
@@ -119,6 +130,11 @@ class _TitleAndPoster extends StatelessWidget {
 }
 
 class _Overview extends StatelessWidget {
+
+  final Movie movie;
+
+  const _Overview(this.movie);
+
   @override
   Widget build(BuildContext context) {
 
@@ -127,7 +143,7 @@ class _Overview extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 25, vertical: 15),
       child: Text(
-          'Describir es explicar, de manera detallada y ordenada, cómo son las personas, animales, lugares, objetos, etc. La descripción sirve sobre todo para ambientar la acción y crear una que haga más creíbles los hechos que se narran. Muchas veces, contribuyen a detener la acción y preparar el escenario de los hechos que siguen. La descripción también se puede definir como la representación verbal de los rasgos propios de un objeto. Al describir una persona, un animal, un sentimiento, etc. Se expresan aquellas características que hacen peculiar a lo descrito, y lo diferencia de otros objetos de otra o de la misma clase.',
+          movie.overview,
           textAlign: TextAlign.justify,
           style: textTheme.subtitle1,),
     );
